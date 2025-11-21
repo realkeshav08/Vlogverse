@@ -1,6 +1,6 @@
-# 🛠️ KashyapConnect Backend - TODO Checklist
+# 🛠️ Vlogverse Backend - TODO Checklist
 
-This file tracks the backend development of KashyapConnect, with user-focused features and milestones. Each item represents a real use case or persona scenario we aim to support.
+This file tracks the backend development of Vlogverse, with user-focused features and milestones. Each item represents a real use case or persona scenario we aim to support.
 
 ---
 

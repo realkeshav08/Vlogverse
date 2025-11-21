@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import './WelcomeBanner.css';
 
 const phrases = [
-  'npm install KashyapConnect',
+  'npm install Vlogverse',
   'Welcome, <Developer />',
   'console.log("Connected.");',
   'Version 1.0.0 – Commit. Push. Deploy.',
   'Connecting developers like APIs',
-  'Booting KashyapConnect OS...',
-  'cd ~/KashyapConnect && start.sh',
+  'Booting Vlogverse OS...',
+  'cd ~/Vlogverse && start.sh',
   'You are now in: $ /dashboard',
   'Rendering Community Feed...'
 ];

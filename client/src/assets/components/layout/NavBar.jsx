@@ -144,8 +144,8 @@ const NavBar = ({ avatar, username, notifications }) => {
                     </ul>
                 </div>
 
-                {/* KashyapConnect Link */}
-                <Link to='/' className="btn btn-ghost text-xl rounded-lg">KashyapConnect</Link>
+                {/* Vlogverse Link */}
+                <Link to='/' className="btn btn-ghost text-xl rounded-lg">Vlogverse</Link>
             </div>
 
             {/* Desktop Nav */}

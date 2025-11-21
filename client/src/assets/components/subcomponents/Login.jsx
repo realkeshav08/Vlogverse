@@ -111,7 +111,7 @@ const Login = () => {
     <div className="hero bg-base-200 min-h-[calc(100vh-48px)] overflow-hidden">
       <div className="hero-content w-full max-w-[725px] lg:max-w-[1000px] flex-col lg:flex-row justify-around">
         <div className="text-center lg:text-left">
-          <h1 className="text-5xl font-bold">KashyapConnect</h1>
+          <h1 className="text-5xl font-bold">Vlogverse</h1>
           <p className="py-6 lg:mr-10">
             The Platform for Developers to Connect and Grow.
           </p>
