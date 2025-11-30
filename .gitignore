@@ -38,5 +38,5 @@ server/.env
 *.sw?
 
 # Tailwind CSS cache (if using Tailwind)
-tailwind.config.js
-client/tailwind.config.js
+# tailwind.config.js
+# client/tailwind.config.js
