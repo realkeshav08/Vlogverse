@@ -1,18 +1,17 @@
-const whitelist = [
+const allowedOrigins = [
     'http://localhost:5173',
-    'https://vlogverse-git-master-asuskeshavkashyap-8825s-projects.vercel.app/'
-]
+    'https://vlogverse-git-master-asuskeshavkashyap-8825s-projects.vercel.app'
+];
 
 const corsOptions = {
     origin: (origin, callback) => {
-        if (whitelist.indexOf(origin) !== -1 || !origin) {
-            callback(null, true)
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
         } else {
-            callback(new Error('Not allowed by CORS'))
+            callback(new Error('Not allowed by CORS'));
         }
     },
-    credentials: true,
-    optionsSuccessStatus: 200
-}
+    credentials: true
+};
 
-module.exports = corsOptions
+module.exports = corsOptions;
