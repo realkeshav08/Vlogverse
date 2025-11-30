@@ -1,6 +1,7 @@
 const allowedOrigins = [
     'http://localhost:5173',
-    'https://vlogverse-git-master-asuskeshavkashyap-8825s-projects.vercel.app'
+    'https://*.vercel.app
+'
 ];
 
 const corsOptions = {
