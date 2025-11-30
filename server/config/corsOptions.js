@@ -1,5 +1,6 @@
 const whitelist = [
-    'http://localhost:5173'
+    'http://localhost:5173',
+    'https://vlogverse-flax.vercel.app'
 ]
 
 const corsOptions = {
