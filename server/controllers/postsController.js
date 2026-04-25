@@ -186,10 +186,95 @@ const deletePost = async (req, res) => {
     }
 }
 
+const likePost = async (req, res) => {
+    try {
+        const postId = req.params.id;
+        const userId = req.user.id;
+
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ message: "Post not found" });
+
+        // Check if already liked
+        if (post.likes.includes(userId)) {
+            // Unlike
+            post.likes = post.likes.filter(id => id.toString() !== userId);
+        } else {
+            // Like
+            post.likes.push(userId);
+        }
+
+        await post.save();
+        res.status(200).json(post);
+    } catch (err) {
+        res.status(500).json({ message: "Error toggling like." });
+    }
+};
+
+const addComment = async (req, res) => {
+    try {
+        const postId = req.params.id;
+        const { text } = req.body;
+        const userId = req.user.id;
+
+        if (!text) return res.status(400).json({ message: "Comment text is required." });
+
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ message: "Post not found" });
+
+        const newComment = {
+            author: userId,
+            text: text,
+            createdAt: new Date()
+        };
+
+        post.comments.push(newComment);
+        await post.save();
+
+        // Populate the author of the new comment for the frontend
+        const updatedPost = await Post.findById(postId).populate('comments.author', 'username firstName lastName avatar');
+        
+        res.status(201).json(updatedPost);
+    } catch (err) {
+        res.status(500).json({ message: "Error adding comment." });
+    }
+};
+
+const deleteComment = async (req, res) => {
+    try {
+        const { id: postId, commentId } = req.params;
+        const userId = req.user.id;
+        const userRole = req.user.role;
+
+        const post = await Post.findById(postId);
+        if (!post) return res.status(404).json({ message: "Post not found" });
+
+        const comment = post.comments.id(commentId);
+        if (!comment) return res.status(404).json({ message: "Comment not found" });
+
+        // Authorization: Comment author, Post author, or Admin/Mod
+        if (
+            comment.author.toString() !== userId && 
+            post.author.toString() !== userId && 
+            !['moderator', 'admin', 'owner'].includes(userRole)
+        ) {
+            return res.status(403).json({ message: "Unauthorized to delete this comment." });
+        }
+
+        comment.deleteOne();
+        await post.save();
+        res.status(200).json(post);
+    } catch (err) {
+        res.status(500).json({ message: "Error deleting comment." });
+    }
+};
+
 module.exports = {
     getAllPosts,
     getPostById,
     createPost,
     updatePost,
-    deletePost
+    deletePost,
+    likePost,
+    addComment,
+    deleteComment
 }

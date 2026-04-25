@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { Outlet } from "react-router-dom"
 import useAuth from './useAuth'
 import useRefreshToken from './useRefreshToken';
-import Loading from '../assets/components/subcomponents/Loading'
+import Loading from '../components/subcomponents/Loading'
 
 const PersistLogin = () => {
     const { auth } = useAuth();

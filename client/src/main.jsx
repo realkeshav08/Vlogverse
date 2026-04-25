@@ -4,9 +4,9 @@ import { BrowserRouter } from 'react-router-dom'
 import App from './App.jsx'
 
 // Context imports
-import { ThemeProvider } from './assets/context/ThemeContext'
-import { AuthProvider } from './assets/context/AuthContext.jsx'
-import { SocketProvider } from './assets/context/SocketContext.jsx'
+import { ThemeProvider } from './context/ThemeContext'
+import { AuthProvider } from './context/AuthContext.jsx'
+import { SocketProvider } from './context/SocketContext.jsx'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
