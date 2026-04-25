@@ -1,0 +1,38 @@
+@import "tailwindcss";
+@plugin "daisyui/index.js";
+
+/* Custom theme overrides */
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+}
+
+/* Global Resets */
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Default fonts */
+body {
+  font-family: "Inter", sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Roboto", sans-serif;
+}
+
+.invalid {
+  color: red;
+}
+
+.valid {
+  color: rgb(12, 166, 233);
+}
+
+.nav-li-hover {
+  background-color: var(--fallback-bc, oklch(var(--bc) / 0.1));
+}
