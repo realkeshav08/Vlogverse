@@ -215,7 +215,7 @@ const EditProfile = () => {
             ref={inputRefs.firstName}
             id='firstName'
             type="text"
-            className="input input-bordered flex-1"
+            className="input flex-1"
             value={formData.firstName}
             disabled={!isEditing.firstName}
             onChange={handleChange}
@@ -249,7 +249,7 @@ const EditProfile = () => {
             ref={inputRefs.lastName}
             id='lastName'
             type="text"
-            className="input input-bordered flex-1"
+            className="input flex-1"
             value={formData.lastName}
             disabled={!isEditing.lastName}
             onChange={handleChange}
@@ -283,7 +283,7 @@ const EditProfile = () => {
             ref={inputRefs.username}
             id='username'
             type="text"
-            className="input input-bordered flex-1"
+            className="input flex-1"
             value={formData.username}
             disabled={!isEditing.username}
             onChange={handleChange}
@@ -317,7 +317,7 @@ const EditProfile = () => {
             ref={inputRefs.email}
             id='email'
             type="text"
-            className="input input-bordered flex-1"
+            className="input flex-1"
             value={formData.email}
             disabled={!isEditing.email}
             onChange={handleChange}
@@ -351,7 +351,7 @@ const EditProfile = () => {
             ref={inputRefs.avatar}
             id='avatar'
             type="text"
-            className="input input-bordered flex-1"
+            className="input flex-1"
             value={formData.avatar}
             disabled={!isEditing.avatar}
             onChange={handleChange}
@@ -420,7 +420,7 @@ const EditProfile = () => {
             ref={inputRefs.location}
             id='location'
             type="text"
-            className="input input-bordered flex-1"
+            className="input flex-1"
             value={formData.location}
             disabled={!isEditing.location}
             onChange={handleChange}
@@ -455,7 +455,7 @@ const EditProfile = () => {
             <select
               ref={inputRefs.role}
               id="role"
-              className="select select-bordered flex-1"
+              className="select flex-1"
               value={formData.role}
               disabled={!isEditing.role}
               onChange={handleChange}
@@ -508,7 +508,7 @@ const EditProfile = () => {
             ref={inputRefs.website}
             id='website'
             type="text"
-            className="input input-bordered flex-1"
+            className="input flex-1"
             value={formData.website}
             disabled={!isEditing.website}
             onChange={handleChange}
@@ -542,7 +542,7 @@ const EditProfile = () => {
             ref={inputRefs.github}
             id='github'
             type="text"
-            className="input input-bordered flex-1"
+            className="input flex-1"
             value={formData.github}
             disabled={!isEditing.github}
             onChange={handleChange}
@@ -576,7 +576,7 @@ const EditProfile = () => {
             ref={inputRefs.linkedin}
             id='linkedin'
             type="text"
-            className="input input-bordered flex-1"
+            className="input flex-1"
             value={formData.linkedin}
             disabled={!isEditing.linkedin}
             onChange={handleChange}
@@ -610,7 +610,7 @@ const EditProfile = () => {
             ref={inputRefs.otherWebsite}
             id='otherWebsite'
             type="text"
-            className="input input-bordered flex-1"
+            className="input flex-1"
             value={formData.otherWebsite}
             disabled={!isEditing.otherWebsite}
             onChange={handleChange}
@@ -667,7 +667,7 @@ const EditProfile = () => {
                 onChange={(e) => setNewSkill(e.target.value)}
                 onKeyDown={handleSkillKeyDown}
                 placeholder="Type a skill and press Enter"
-                className="input input-bordered flex-1"
+                className="input flex-1"
               />
               <button
                 type="button"

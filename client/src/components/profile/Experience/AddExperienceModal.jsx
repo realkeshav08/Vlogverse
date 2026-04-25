@@ -31,7 +31,7 @@ function ExperienceModal({ onClose, onSave, initialData }) {
             placeholder="Role"
             value={form.role}
             onChange={handleChange}
-            className="input input-bordered w-full bg-base-100 text-base-content"
+            className="input w-full bg-base-100 text-base-content"
           />
 
           <input
@@ -40,7 +40,7 @@ function ExperienceModal({ onClose, onSave, initialData }) {
             placeholder="Company"
             value={form.company}
             onChange={handleChange}
-            className="input input-bordered w-full bg-base-100 text-base-content"
+            className="input w-full bg-base-100 text-base-content"
           />
 
           <input
@@ -49,7 +49,7 @@ function ExperienceModal({ onClose, onSave, initialData }) {
             placeholder="Duration (e.g., Jan 2023 - May 2024)"
             value={form.duration}
             onChange={handleChange}
-            className="input input-bordered w-full bg-base-100 text-base-content"
+            className="input w-full bg-base-100 text-base-content"
           />
 
           <textarea

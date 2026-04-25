@@ -33,7 +33,7 @@ function ProjectModal({ onClose, onSave, initialData }) {
             placeholder="Project Title"
             value={form.title}
             onChange={handleChange}
-            className="input input-bordered w-full bg-base-100 text-base-content"
+            className="input w-full bg-base-100 text-base-content"
           />
 
           <input
@@ -42,7 +42,7 @@ function ProjectModal({ onClose, onSave, initialData }) {
             placeholder="Duration (e.g., Jan 2024 - Dec 2024)"
             value={form.duration}
             onChange={handleChange}
-            className="input input-bordered w-full bg-base-100 text-base-content"
+            className="input w-full bg-base-100 text-base-content"
           />
 
           <textarea
@@ -60,7 +60,7 @@ function ProjectModal({ onClose, onSave, initialData }) {
             placeholder="Skills (e.g., React, Node)"
             value={form.skills}
             onChange={handleChange}
-            className="input input-bordered w-full bg-base-100 text-base-content"
+            className="input w-full bg-base-100 text-base-content"
           />
 
           <input
@@ -69,7 +69,7 @@ function ProjectModal({ onClose, onSave, initialData }) {
             placeholder="Image URL"
             value={form.image}
             onChange={handleChange}
-            className="input input-bordered w-full bg-base-100 text-base-content"
+            className="input w-full bg-base-100 text-base-content"
           />
 
           <div className="flex justify-end gap-3">

@@ -28,19 +28,16 @@ const refreshRoutes = require('./routes/refreshRoutes');
 const logoutRoutes = require('./routes/logoutRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const postsRoutes = require('./routes/postsRoutes');
+const statsRoutes = require('./routes/statsRoutes');
 
 // Middleware
 app.use(express.json());
 app.use(cookieParser());
-const { verifyJWT } = require('./middleware/verifyJWT');
 
 // Main DB Routes
 app.use('/register', registerRoutes);
 app.use('/logout', logoutRoutes);
 app.use('/auth', authRoutes);
-app.get('/auth/verify', verifyJWT, (req, res) => {
-    res.json({ message: `Hello ${req.user.firstName}, you have successfully logged on.` });
-})
 app.use('/auth/refresh', refreshRoutes);
 
 // System Routes
@@ -53,7 +50,8 @@ app.use('/api/users', userRoutes);
 app.use('/profile', profileRoutes);
 
 // Post Routes
-app.use('/api/posts', postsRoutes)
+app.use('/api/posts', postsRoutes);
+app.use('/api/stats', statsRoutes);
 
 server.listen(port, () => {
     console.log(`Server running on port: ${port}`);

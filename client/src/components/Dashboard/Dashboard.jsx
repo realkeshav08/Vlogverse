@@ -42,11 +42,6 @@ const Dashboard = () => {
   };
 
 
-  window.scrollTo({
-    top: 0,
-    behavior: 'smooth'
-  })
-
   return (
     <div className="min-h-screen pb-10">
       {/* main container */}

@@ -151,7 +151,7 @@ const CreatePost = ({ POST_URL, auth, setAuth, setPosts }) => {
                         <input
                             type="url"
                             placeholder="Paste image URL..."
-                            className="input input-bordered input-sm w-full"
+                            className="input input-sm w-full"
                             autoFocus={showImageInput}
                             onChange={(e) =>
                                 setPostData(prev => ({
@@ -177,7 +177,7 @@ const CreatePost = ({ POST_URL, auth, setAuth, setPosts }) => {
                         <input
                             type="url"
                             placeholder="Paste video URL..."
-                            className="input input-bordered input-sm w-full"
+                            className="input input-sm w-full"
                             autoFocus={showVideoInput}
                             onChange={(e) =>
                                 setPostData(prev => ({

@@ -44,7 +44,7 @@ const Jobs = () => {
                 <input
                     type="text"
                     placeholder="Search by job title or company..."
-                    className="input input-bordered w-full focus:outline-none focus:ring-2 focus:ring-primary rounded-xl"
+                    className="input w-full focus:outline-none focus:ring-2 focus:ring-primary rounded-xl"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                 />

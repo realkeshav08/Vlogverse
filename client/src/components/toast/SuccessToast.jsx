@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
-import { Alert } from 'react-daisyui';
+
 
 const SuccessToast = ({ message, show, icon }) => {
   return (
@@ -13,14 +13,14 @@ const SuccessToast = ({ message, show, icon }) => {
             transition={{ duration: 0.4 }}
             className="w-[55%]"
           >
-            <Alert className="alert alert-success bg-accent shadow-lg relative pr-2 rounded-lg">
+            <div className="alert alert-success bg-accent shadow-lg relative pr-2 rounded-lg">
               {icon && (
                 <div>
                   {icon}
                 </div>
               )}
               <span className="font-medium text-base">{message}</span>
-            </Alert>
+            </div>
           </motion.div>
         </div>
       )}

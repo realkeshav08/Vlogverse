@@ -1,7 +1,11 @@
-/* Tailwind imports */
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@plugin "daisyui/index.js";
+
+/* Custom theme overrides */
+@theme {
+  --font-inter: "Inter", sans-serif;
+  --font-roboto: "Roboto", sans-serif;
+}
 
 /* Global Resets */
 *,
@@ -14,51 +18,11 @@
 
 /* Default fonts */
 body {
-  font-family: "Inter", sans-serif; /* Set Inter as default for body text */
+  font-family: "Inter", sans-serif;
 }
 
 h1, h2, h3, h4, h5, h6 {
-  font-family: "Roboto", sans-serif; /* Set Roboto for headings */
-}
-
-/* Your existing Roboto font-weight classes */
-.roboto-thin {
   font-family: "Roboto", sans-serif;
-  font-weight: 100;
-}
-
-.roboto-light {
-  font-family: "Roboto", sans-serif;
-  font-weight: 300;
-}
-
-.roboto-regular {
-  font-family: "Roboto", sans-serif;
-  font-weight: 400;
-}
-
-.roboto-medium {
-  font-family: "Roboto", sans-serif;
-  font-weight: 500;
-}
-
-.roboto-bold {
-  font-family: "Roboto", sans-serif;
-  font-weight: 700;
-}
-
-.roboto-black {
-  font-family: "Roboto", sans-serif;
-  font-weight: 900;
-}
-
-.offscreen {
-  position: absolute;
-  left: -9999px;
-}
-
-.hide {
-  display: none;
 }
 
 .invalid {

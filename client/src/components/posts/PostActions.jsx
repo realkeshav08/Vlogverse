@@ -111,7 +111,7 @@ const PostActions = ({ post, auth, setPosts, showSuccess, showError }) => {
                     <form onSubmit={handleComment} className="flex gap-2">
                         <input
                             type="text"
-                            className="input input-bordered input-sm w-full rounded-full"
+                            className="input input-sm w-full rounded-full"
                             placeholder="Add a comment..."
                             value={commentText}
                             onChange={(e) => setCommentText(e.target.value)}

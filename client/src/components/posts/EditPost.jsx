@@ -136,7 +136,7 @@ const EditPost = ({ auth, post, POST_URL, showError, showSuccess, setPosts, fetc
                     <input
                         type="url"
                         placeholder="Paste image URL"
-                        className="input input-bordered w-full my-2"
+                        className="input w-full my-2"
                         onChange={(e) =>
                             setPostData(prev => ({
                                 ...prev,
@@ -152,7 +152,7 @@ const EditPost = ({ auth, post, POST_URL, showError, showSuccess, setPosts, fetc
                     <input
                         type="url"
                         placeholder="Paste video URL"
-                        className="input input-bordered w-full my-2"
+                        className="input w-full my-2"
                         onChange={(e) =>
                             setPostData(prev => ({
                                 ...prev,

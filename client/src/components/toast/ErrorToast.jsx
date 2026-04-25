@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import { Alert } from "react-daisyui";
+
 
 const ErrorToast = ({ message, show, icon, iconBgColor, status, onClose }) => {
   return (
@@ -13,8 +13,7 @@ const ErrorToast = ({ message, show, icon, iconBgColor, status, onClose }) => {
             transition={{ duration: 0.4 }}
             className="w-[55%] "
           >
-            <Alert className="alert alert-error bg-[#ffa1af] shadow-lg relative pr-2 rounded-lg">
-
+            <div className="alert alert-error bg-[#ffa1af] shadow-lg relative pr-2 rounded-lg">
               {icon && (
                 <div>
                   {icon}
@@ -24,7 +23,7 @@ const ErrorToast = ({ message, show, icon, iconBgColor, status, onClose }) => {
               <span className="font-medium text-base">
                 {message}
               </span>
-            </Alert>
+            </div>
           </motion.div>
         </div>
       )

@@ -48,14 +48,6 @@ const userSchema = new mongoose.Schema({
         }
     ],
 
-    // User's network - similar to becoming friends or connecting
-    network: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'User'
-        }
-    ],
-
     // Posts - Reference to Posts model
     posts: [
         {
@@ -64,13 +56,6 @@ const userSchema = new mongoose.Schema({
         }
     ],
 
-    // Projects - Reference to Projects model
-    projects: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Project'
-        }
-    ]
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
