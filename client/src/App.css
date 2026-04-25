@@ -5,6 +5,8 @@
 @theme {
   --font-inter: "Inter", sans-serif;
   --font-roboto: "Roboto", sans-serif;
+  --font-pacifico: "Pacifico", cursive;
+  --font-outfit: "Outfit", sans-serif;
 }
 
 /* Global Resets */
@@ -36,3 +38,21 @@ h1, h2, h3, h4, h5, h6 {
 .nav-li-hover {
   background-color: var(--fallback-bc, oklch(var(--bc) / 0.1));
 }
+
+@keyframes fade-in-left {
+  from { opacity: 0; transform: translateX(-50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fade-in-right {
+  from { opacity: 0; transform: translateX(50px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.animate-fade-in-left {
+  animation: fade-in-left 1s ease-out forwards;
+}
+
+.animate-fade-in-right {
+  animation: fade-in-right 1s ease-out forwards;
+}

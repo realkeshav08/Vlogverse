@@ -29,41 +29,40 @@ function App() {
   const { auth, setAuth } = useAuth();
 
   return (
-    <main className='w-full min-h-screen' data-theme={darkMode ? "dim" : "nord"}>
-      <div className='max-w-[2000px] mx-auto min-h-screen px-2 py-6 bg-base-200'>
-        <Routes>
-          <Route path="*" element={<NotFound />} />
-          <Route path='*' element={<Navigate to='/' replace />} />
-          <Route path='/unauthorized' element={<Unauthorized />} />
+    <main className='w-full min-h-screen bg-base-200' data-theme={darkMode ? "dim" : "nord"}>
+      <Routes>
+        <Route path="*" element={<NotFound />} />
+        <Route path='*' element={<Navigate to='/' replace />} />
+        <Route path='/unauthorized' element={<Unauthorized />} />
 
-          <Route element={<PersistLogin />}>
-            <Route element={<RedirectIfAuth />}>
-              <Route path='/' element={<Login />} />
-              <Route path='/register' element={<Register />} />
-              <Route path='/login' element={<Login />} />
-            </Route>
+        <Route element={<PersistLogin />}>
+          <Route element={<RedirectIfAuth />}>
+            <Route path='/' element={<Login />} />
+            <Route path='/register' element={<Register />} />
+            <Route path='/login' element={<Login />} />
           </Route>
+        </Route>
 
-          {/* Protected Routes */}
-          <Route element={<PersistLogin />}>
-            <Route element={<RequireAuth allowedRoles={['owner', 'admin', 'moderator', 'user']} />}>
-              <Route element={<Layout />}>
-                <Route path='/dashboard' element={<Dashboard />} />
-                <Route path='/profile' element={<Navigate to={`/profile/${auth?.username}`} />} />
-                <Route path="/profile/:username" element={<ProfileProvider />}>
-                  <Route index element={<Profile />} />
-                  <Route path="edit" element={<EditProfile />} />
-                </Route>
-                <Route path='/blogs' element={<Posts auth={auth} setAuth={setAuth} />} />
-                <Route path='/jobs' element={<Jobs />} />
-                <Route path='/network' element={<Network />} />
+        {/* Protected Routes */}
+        <Route element={<PersistLogin />}>
+          <Route element={<RequireAuth allowedRoles={['owner', 'admin', 'moderator', 'user']} />}>
+            <Route element={<Layout />}>
+              <Route path='/dashboard' element={<Dashboard />} />
+              <Route path='/profile' element={<Navigate to={`/profile/${auth?.username}`} />} />
+              <Route path="/profile/:username" element={<ProfileProvider />}>
+                <Route index element={<Profile />} />
+                <Route path="edit" element={<EditProfile />} />
               </Route>
+              <Route path='/blogs' element={<Posts auth={auth} setAuth={setAuth} />} />
+              <Route path='/search' element={<div className="text-center py-20 text-2xl font-bold">Search coming soon...</div>} />
+              <Route path='/jobs' element={<Jobs />} />
+              <Route path='/network' element={<Network />} />
             </Route>
           </Route>
-          {/* End Protected Routes */}
+        </Route>
+        {/* End Protected Routes */}
 
-        </Routes>
-      </div>
+      </Routes>
     </main>
   )
 }

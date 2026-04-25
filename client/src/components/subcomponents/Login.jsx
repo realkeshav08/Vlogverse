@@ -3,7 +3,6 @@ import { Link, useNavigate, useLocation } from "react-router-dom";
 import { IoMdEyeOff, IoMdEye } from "react-icons/io";
 import { FcGoogle } from "react-icons/fc";
 import axios from "../../api/axios";
-import { FaTimesCircle, FaCheckCircle } from "react-icons/fa";
 import useAuth from "../../auth/useAuth";
 import useRefreshToken from '../../auth/useRefreshToken'
 
@@ -25,20 +24,15 @@ const Login = () => {
   const [formData, setFormData] = useState({ login: "", password: "" });
   const loginRef = useRef();
   
-  // Stats state with safe defaults
   const [stats, setStats] = useState({ users: 0, communities: 0 });
-
   const [passwordType, setPasswordType] = useState("password");
   const [buttonStatus, setButtonStatus] = useState("Sign In");
 
-  // Hooks
   const { message: errorMessage, show: showErrorToast, showError } = useErrorToast();
   const { message: successMessage, show: showSuccessToast, showSuccess } = useSuccessToast();
 
   useEffect(() => { 
     loginRef.current?.focus(); 
-    
-    // Fetch stats on mount
     const fetchStats = async () => {
       try {
         const response = await axios.get('/api/stats');
@@ -79,130 +73,159 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#0a0a0c] font-outfit relative flex items-center justify-center overflow-x-hidden py-12 px-6">
+    <div className="min-h-screen w-full font-outfit relative flex flex-col overflow-x-hidden bg-[#0a0a0c]">
       
-      <div className="absolute inset-0 z-0 overflow-hidden">
-        <img 
-          src="/images/abstract-bg.png" 
-          alt="" 
-          className="w-full h-full object-cover scale-105" 
-        />
-        <div className="absolute inset-0 bg-gradient-to-tr from-[#0a0a0c] via-[#0a0a0c]/60 to-[#0a0a0c]/90 backdrop-blur-[3px]"></div>
+      {/* Background Layer - Synchronized with Zoom */}
+      <div 
+        className="absolute inset-0 z-0 bg-[#0a0a0c]"
+        style={{
+          backgroundImage: 'url("/images/classy-bg.png")',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'scroll',
+          backgroundRepeat: 'no-repeat'
+        }}
+      >
+        {/* Deep atmospheric overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0c]/95 via-[#0a0a0c]/60 to-[#0a0a0c]/95 backdrop-blur-[2px]"></div>
       </div>
 
-      <div className="relative z-10 w-full max-w-[1200px] flex flex-col lg:flex-row items-center justify-between gap-16 xl:gap-24 animate-fade py-20">
+      {/* Main Content Area */}
+      <div className="relative z-10 flex-1 flex flex-col lg:flex-row items-center justify-center px-8 lg:px-12 py-12 lg:py-0 w-full mx-auto gap-12 xl:gap-32">
         
-        <div className="flex-1 text-center lg:text-left space-y-6">
-          <div className="inline-block px-4 py-1 rounded-full bg-primary/10 border border-primary/20 backdrop-blur-md mb-4">
-            <span className="text-primary text-[10px] font-black uppercase tracking-[0.4em]">Public Beta v2.0</span>
-          </div>
-          
+        {/* Left Side: Branding & Stats */}
+        <div className="flex flex-col justify-center space-y-6 animate-fade-in-left w-full lg:w-auto text-center lg:text-left max-w-2xl">
           <div className="space-y-4">
-            <h1 className="font-pacifico text-7xl lg:text-9xl text-white drop-shadow-2xl">Vlogverse</h1>
-            <h2 className="text-4xl lg:text-7xl font-black text-white leading-[0.9] tracking-tighter">
-              YOUR VOICE.<br/>
-              YOUR VERSE.<br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-[#00d2ff]">EVERYONE'S</span> THOUGHTS.
-            </h2>
+            <div className="inline-block px-3 py-1 rounded-md bg-primary/20 border border-primary/30 backdrop-blur-md">
+              <span className="text-[10px] font-black uppercase tracking-[0.3em] text-primary-content">Public Beta v2.0</span>
+            </div>
+            <h1 className="text-6xl lg:text-8xl xl:text-9xl font-bold text-white tracking-tighter leading-none m-0">Vlogverse</h1>
+            <div className="space-y-1">
+              <h2 className="text-3xl lg:text-5xl xl:text-6xl font-black text-white leading-tight tracking-tight uppercase">
+                Your Voice.<br/>
+                Your Verse.<br/>
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-cyan-400">Everyone's</span><br/>
+                Thoughts.
+              </h2>
+            </div>
           </div>
 
-          <p className="text-lg lg:text-xl text-slate-400 max-w-lg mx-auto lg:mx-0 font-medium leading-relaxed opacity-80">
+          <p className="text-lg lg:text-xl text-white/60 max-w-xl font-medium leading-relaxed">
             A global community for everyone to share thoughts, vlogs, and ideas. Connect with the world in real-time.
           </p>
 
-          <div className="flex flex-wrap justify-center lg:justify-start gap-12 pt-8">
-             <div className="flex flex-col">
-                <span className="text-3xl font-black text-white tracking-tighter">
-                  {(stats?.users || 0).toLocaleString()}+
+          <div className="flex items-center gap-12 pt-4">
+             <div className="flex flex-col gap-1">
+                <span className="text-3xl lg:text-5xl font-black text-white tracking-tighter">
+                  {(stats?.users || 0)}
                 </span>
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Active Members</span>
+                <span className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Active Members</span>
              </div>
-             <div className="w-[1px] h-10 bg-white/10 hidden sm:block"></div>
-             <div className="flex flex-col">
-                <span className="text-3xl font-black text-white tracking-tighter">
-                  {(stats?.communities || 0).toLocaleString()}+
+             <div className="w-[1px] h-12 bg-white/10"></div>
+             <div className="flex flex-col gap-1">
+                <span className="text-3xl lg:text-5xl font-black text-white tracking-tighter">
+                  {(stats?.communities || 0)}
                 </span>
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-widest">Communities</span>
+                <span className="text-[10px] font-bold text-white/40 uppercase tracking-[0.2em]">Communities</span>
              </div>
           </div>
         </div>
 
-        <div className="w-full max-w-[420px]">
-          <div className="bg-white/[0.04] backdrop-blur-3xl border border-white/10 p-10 lg:p-12 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
-            <div className="absolute -top-12 -right-12 w-48 h-48 bg-primary/20 rounded-full blur-[80px]"></div>
+        {/* Right Side: Sign In Form */}
+        <div className="w-full lg:w-[600px] animate-fade-in-right">
+          <div className="bg-black/60 backdrop-blur-[40px] border border-white/20 p-12 lg:p-20 rounded-none shadow-[0_0_100px_rgba(0,0,0,0.5)] relative overflow-hidden group hover:border-primary/50 transition-all duration-500">
+            <div className="absolute -top-24 -right-24 w-64 h-64 bg-primary/10 rounded-full blur-[100px]"></div>
             
             <div className="relative z-10">
-              <div className="mb-10 text-center lg:text-left">
-                <h3 className="text-3xl font-bold text-white mb-1">Sign In</h3>
-                <p className="text-slate-500 text-sm">Access your personal workspace.</p>
+              {/* Form Header / Logo */}
+              <div className="mb-12 text-center">
+                <h3 className="text-2xl lg:text-3xl font-outfit font-black text-white uppercase tracking-[0.3em]">Sign In</h3>
               </div>
 
-              <form className="flex flex-col gap-4" onSubmit={handleLogin}>
-                <input
-                  ref={loginRef}
-                  onChange={handleChange}
-                  id="login"
-                  type="text"
-                  placeholder="Username or Email"
-                  className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all placeholder:text-slate-600"
-                  required
-                  value={formData.login}
-                />
-                <div className="relative">
-                  <input
-                    onChange={handleChange}
-                    id="password"
-                    type={passwordType}
-                    placeholder="Password"
-                    className="w-full bg-white/5 border border-white/10 rounded-2xl px-6 py-4 text-sm text-white focus:outline-none focus:border-primary/50 focus:bg-white/10 transition-all placeholder:text-slate-600"
-                    required
-                    value={formData.password}
-                  />
-                  <div className="absolute right-5 top-1/2 -translate-y-1/2">
-                    {passwordType === "password" ? (
-                      <IoMdEyeOff className="text-xl text-slate-500 cursor-pointer hover:text-slate-300" onClick={() => setPasswordType("text")} />
-                    ) : (
-                      <IoMdEye className="text-xl text-slate-500 cursor-pointer hover:text-slate-300" onClick={() => setPasswordType("password")} />
-                    )}
+              <form className="flex flex-col gap-12" onSubmit={handleLogin}>
+                <div className="flex flex-col gap-10">
+                  <div className="group">
+                    <label className="text-xs font-black text-white/40 uppercase tracking-[0.3em] ml-1 mb-4 block group-focus-within:text-primary transition-colors">Credential Handle</label>
+                    <input
+                      ref={loginRef}
+                      onChange={handleChange}
+                      id="login"
+                      type="text"
+                      placeholder="Username or Email"
+                      className="w-full bg-white/[0.03] border border-white/20 rounded-none px-8 py-7 text-xl text-white focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/60 focus:bg-white/[0.08] transition-all placeholder:text-white/10"
+                      required
+                      value={formData.login}
+                    />
+                  </div>
+
+                  <div className="group">
+                    <label className="text-sm font-black text-white/50 uppercase tracking-[0.4em] ml-1 mb-5 block group-focus-within:text-primary transition-colors">Access Key</label>
+                    <div className="relative">
+                      <input
+                        onChange={handleChange}
+                        id="password"
+                        type={passwordType}
+                        placeholder="Password"
+                        className="w-full bg-white/[0.03] border border-white/20 rounded-none px-8 py-7 text-xl text-white focus:outline-none focus:ring-1 focus:ring-primary/40 focus:border-primary/60 focus:bg-white/[0.08] transition-all placeholder:text-white/10"
+                        required
+                        value={formData.password}
+                      />
+                      <button 
+                        type="button"
+                        className="absolute right-8 top-1/2 -translate-y-1/2 text-white/20 hover:text-white transition-colors"
+                        onClick={() => setPasswordType(passwordType === "password" ? "text" : "password")}
+                      >
+                        {passwordType === "password" ? <IoMdEyeOff size={28} /> : <IoMdEye size={28} />}
+                      </button>
+                    </div>
                   </div>
                 </div>
 
-                <div className="flex items-center justify-between px-2 py-1 text-sm">
-                  <label className="flex items-center gap-2 text-slate-400 cursor-pointer select-none">
-                    <input
-                      type="checkbox"
-                      className="checkbox checkbox-xs border-white/20 bg-white/5 rounded-md"
-                      onChange={() => setPersist(!persist)}
-                      checked={persist}
-                    />
-                    Remember Me
+                <div className="flex items-center justify-between px-1 text-base -mt-6">
+                  <label className="flex items-center gap-5 text-white/40 cursor-pointer select-none group">
+                    <div className="relative flex items-center justify-center">
+                      <input
+                        type="checkbox"
+                        className="peer h-7 w-7 appearance-none border border-white/20 bg-white/5 checked:bg-primary checked:border-primary transition-all cursor-pointer rounded-none"
+                        checked={persist}
+                        onChange={() => setPersist(prev => !prev)}
+                      />
+                      <svg className="absolute h-5 w-5 text-white opacity-0 peer-checked:opacity-100 transition-opacity pointer-events-none" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="4">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="font-black uppercase tracking-widest text-xs group-hover:text-white/60 transition-colors">Keep me signed in</span>
                   </label>
-                  <a href="#" className="text-primary font-bold hover:underline">Forgot?</a>
+                  <Link to="/forgot-password" title="Forgot Password" className="text-primary font-black uppercase tracking-widest text-xs hover:text-primary/80 transition-all border-b-2 border-primary/20 hover:border-primary">
+                    Recovery?
+                  </Link>
                 </div>
 
                 <button
                   type="submit"
-                  disabled={buttonStatus === "Connecting..."}
-                  className="bg-primary hover:bg-primary/90 disabled:opacity-50 text-white font-bold py-4 rounded-2xl mt-4 transition-all duration-300 shadow-xl shadow-primary/20 h-14"
+                  className="group relative w-full bg-primary hover:bg-primary/90 text-white font-black py-8 rounded-none transition-all duration-300 shadow-[25px_25px_70px_-15px_rgba(0,0,0,0.6)] overflow-hidden"
                 >
-                  {buttonStatus}
+                  <span className="relative z-10 flex items-center justify-center gap-5 text-lg uppercase tracking-[0.5em]">
+                    Sign In
+                  </span>
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000"></div>
                 </button>
-                
-                <div className="flex items-center gap-4 my-6">
-                  <div className="h-[1px] bg-white/5 flex-1"></div>
-                  <span className="text-[10px] font-bold text-slate-600 uppercase tracking-widest">Collaborative Entry</span>
-                  <div className="h-[1px] bg-white/5 flex-1"></div>
+
+                <div className="flex items-center gap-10 py-2">
+                  <div className="h-[1px] bg-white/10 flex-1"></div>
+                  <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.5em]">Alternative Protocol</span>
+                  <div className="h-[1px] bg-white/10 flex-1"></div>
                 </div>
 
-                <button type="button" className="flex items-center justify-center gap-3 w-full bg-white/5 border border-white/10 hover:bg-white/10 text-white font-bold py-3.5 rounded-2xl text-sm transition-all h-13">
-                  <FcGoogle className="text-xl" />
-                  Sign in with Google
+                <button type="button" className="flex items-center justify-center gap-5 w-full bg-white/[0.03] border border-white/20 hover:bg-white/[0.08] hover:border-white/40 text-white font-black py-6 rounded-none text-xs uppercase tracking-[0.2em] transition-all group">
+                  <FcGoogle className="text-3xl group-hover:scale-110 transition-transform" />
+                  Continue with Google Network
                 </button>
               </form>
 
               <div className="mt-8 text-center">
-                <p className="text-sm text-slate-500">
-                  New to the verse? <Link to="/register" className="text-primary font-bold hover:underline">Join Now</Link>
+                <p className="text-sm text-white/40 font-medium">
+                  New to the verse? <Link to="/register" className="text-primary font-bold hover:underline ml-1">Join Now</Link>
                 </p>
               </div>
             </div>
@@ -210,11 +233,19 @@ const Login = () => {
         </div>
       </div>
 
-      <div className="relative mt-auto py-12 w-full text-center z-10">
-        <p className="text-slate-500 text-[11px] font-medium tracking-widest uppercase opacity-40">
-          Designed and Developed by <span className="text-slate-300 font-bold">© Keshav Kashyap</span>
-        </p>
-      </div>
+      {/* Footer Block - Centered */}
+      <footer className="relative z-10 w-full py-8 border-t border-white/5 bg-black/10 backdrop-blur-sm mt-auto">
+        <div className="w-full flex flex-col items-center justify-center text-center px-6">
+          <p className="text-white/20 text-[10px] font-black uppercase tracking-[0.5em] mb-4">
+            Designed and Developed by <span className="text-white/60 font-black">© Keshav Kashyap</span>
+          </p>
+          <div className="flex items-center gap-8 text-white/20 text-[10px] font-black uppercase tracking-widest">
+            <span className="hover:text-primary cursor-pointer transition-colors">Terms</span>
+            <span className="hover:text-primary cursor-pointer transition-colors">Privacy</span>
+            <span className="hover:text-primary cursor-pointer transition-colors">Support</span>
+          </div>
+        </div>
+      </footer>
 
       <SuccessToast message={successMessage} show={showSuccessToast} />
       <ErrorToast message={errorMessage} show={showErrorToast} />

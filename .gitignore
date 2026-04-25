@@ -60,3 +60,10 @@ Desktop.ini
 # Testing
 coverage/
 .nyc_output/
+
+# Assistant Artifacts
+walkthrough.md
+implementation_plan.md
+task.md
+artifacts/
+scratch/
