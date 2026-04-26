@@ -15,10 +15,16 @@ const PersistLogin = () => {
 
         const verifyRefreshToken = async () => {
             try {
+                // Add a 5 second timeout safety net
+                const timeout = setTimeout(() => {
+                    if (isMounted) setIsLoading(false);
+                }, 5000);
+
                 await refresh();
+                clearTimeout(timeout);
             }
             catch (err) {
-                console.log(err);
+                console.log("Auto-login failed:", err);
             }
             finally {
                 isMounted && setIsLoading(false);

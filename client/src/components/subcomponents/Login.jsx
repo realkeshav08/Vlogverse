@@ -5,12 +5,14 @@ import { FcGoogle } from "react-icons/fc";
 import axios from "../../api/axios";
 import useAuth from "../../auth/useAuth";
 import useRefreshToken from '../../auth/useRefreshToken'
+import { useGoogleLogin } from '@react-oauth/google';
 
 // Toast imports
 import ErrorToast from "../toast/ErrorToast";
 import { useErrorToast } from "../toast/useErrorToast";
 import SuccessToast from "../toast/SuccessToast";
 import { useSuccessToast } from "../toast/useSuccessToast";
+import LoginSuccessSplash from "./LoginSuccessSplash";
 
 const LOGIN_URL = "/auth";
 
@@ -30,6 +32,7 @@ const Login = () => {
 
   const { message: errorMessage, show: showErrorToast, showError } = useErrorToast();
   const { message: successMessage, show: showSuccessToast, showSuccess } = useSuccessToast();
+  const [welcomeUser, setWelcomeUser] = useState(null);
 
   useEffect(() => { 
     loginRef.current?.focus(); 
@@ -60,20 +63,47 @@ const Login = () => {
         withCredentials: true,
       });
       const { accessToken, user } = response.data;
-      showSuccess(`Welcome back!`);
-      setTimeout(async () => {
+      setWelcomeUser(user.firstName || user.username);
+      setTimeout(() => {
         setAuth({ login: formData.login, username: user.username, role: user.role, accessToken });
-        await refresh();
+        setWelcomeUser(null);
         navigate(from, { replace: true });
-      }, 1000);
+      }, 1500); // 1.5s to give it a bit of breath
     } catch (err) {
-      showError(err.response?.data?.message || "Login Failed");
-      setButtonStatus("Sign In");
+      console.error('Login attempt failed:', err);
+      const errorMessage = err.response?.data?.message 
+        || err.response?.data?.error 
+        || (err.response ? `Error ${err.response.status}: ${err.response.statusText}` : "Network Error: Check your connection");
+      showError(errorMessage);
     }
   };
 
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setButtonStatus("Connecting...");
+      try {
+        const response = await axios.post("/auth/google", { 
+          idToken: tokenResponse.access_token 
+        });
+        const { accessToken, user } = response.data;
+        setWelcomeUser(user.firstName || user.username);
+        setTimeout(() => {
+          setAuth({ login: user.email, username: user.username, role: user.role, accessToken });
+          setWelcomeUser(null);
+          navigate(from, { replace: true });
+        }, 1500);
+      } catch (err) {
+        showError("Google Sign-In failed. Please try again.");
+        setButtonStatus("Sign In");
+      }
+    },
+    onError: () => showError("Google Sign-In was unsuccessful.")
+  });
+
   return (
-    <div className="min-h-screen w-full font-outfit relative flex flex-col overflow-x-hidden bg-[#0a0a0c]">
+    <>
+      {welcomeUser && <LoginSuccessSplash username={welcomeUser} />}
+      <div className="min-h-screen w-full font-outfit relative flex flex-col overflow-x-hidden bg-[#0a0a0c]">
       
       {/* Background Layer - Synchronized with Zoom */}
       <div 
@@ -217,7 +247,11 @@ const Login = () => {
                   <div className="h-[1px] bg-white/10 flex-1"></div>
                 </div>
 
-                <button type="button" className="flex items-center justify-center gap-5 w-full bg-white/[0.03] border border-white/20 hover:bg-white/[0.08] hover:border-white/40 text-white font-black py-6 rounded-none text-xs uppercase tracking-[0.2em] transition-all group">
+                <button 
+                  type="button" 
+                  onClick={() => handleGoogleLogin()}
+                  className="flex items-center justify-center gap-5 w-full bg-white/[0.03] border border-white/20 hover:bg-white/[0.08] hover:border-white/40 text-white font-black py-6 rounded-none text-xs uppercase tracking-[0.2em] transition-all group"
+                >
                   <FcGoogle className="text-3xl group-hover:scale-110 transition-transform" />
                   Continue with Google Network
                 </button>
@@ -249,7 +283,8 @@ const Login = () => {
 
       <SuccessToast message={successMessage} show={showSuccessToast} />
       <ErrorToast message={errorMessage} show={showErrorToast} />
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -4,12 +4,17 @@ import axios from "../../api/axios";
 import { IoMdEyeOff, IoMdEye } from "react-icons/io";
 import { FaCheckCircle } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
+import { useGoogleLogin } from '@react-oauth/google';
+import { useNavigate } from "react-router-dom";
+import useAuth from "../../auth/useAuth";
+import useRefreshToken from "../../auth/useRefreshToken";
 
 // Toast imports
 import ErrorToast from "../toast/ErrorToast";
 import { useErrorToast } from "../toast/useErrorToast";
 import SuccessToast from "../toast/SuccessToast";
 import { useSuccessToast } from "../toast/useSuccessToast";
+import LoginSuccessSplash from "./LoginSuccessSplash";
 
 // REGEX for validation
 const NAME_REGEX = /^[a-zA-Z][a-zA-Z- ]{1,50}$/;
@@ -20,6 +25,10 @@ const PASSWORD_REGEX = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%]).{8,24}$/
 const REGISTER_URL = "/register";
 
 const Register = () => {
+  const navigate = useNavigate();
+  const { setAuth } = useAuth();
+  const refresh = useRefreshToken();
+  const [welcomeUser, setWelcomeUser] = useState(null);
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -48,6 +57,7 @@ const Register = () => {
   const [emailAvailable, setEmailAvailable] = useState(null);
   const [buttonStatus, setButtonStatus] = useState("Launch Verse");
   const [stats, setStats] = useState({ users: 0, communities: 0 });
+  const [fieldErrors, setFieldErrors] = useState({});
 
   useEffect(() => {
     firstNameRef.current?.focus();
@@ -109,29 +119,73 @@ const Register = () => {
     e.preventDefault();
     setButtonStatus("Initializing...");
 
-    if (!validFirstName || !validLastName || !validUsername || !validEmail || !validPassword || !validMatchingPassword) {
-      showError("Please check the form for errors");
+    const errors = {};
+    if (!validFirstName) errors.firstName = "Name must start with a letter and contain only letters, spaces, or hyphens.";
+    if (!validLastName) errors.lastName = "Name must start with a letter and contain only letters, spaces, or hyphens.";
+    if (!validUsername) errors.username = "Handle must be 5-30 characters (lowercase letters, numbers, hyphens only).";
+    if (usernameAvailable === false) errors.username = "This handle is already taken.";
+    if (!validEmail) errors.email = "Please enter a valid digital mail address.";
+    if (emailAvailable === false) errors.email = "This digital mail is already in use.";
+    if (!validPassword) errors.password = "Key must be 8-24 chars with uppercase, lowercase, number, and a special char (!@#$%).";
+    if (!validMatchingPassword) errors.passwordMatch = "Keys do not match.";
+
+    setFieldErrors(errors);
+
+    if (Object.keys(errors).length > 0) {
+      showError("Please correct the highlighted errors");
       setButtonStatus("Launch Verse");
       return;
     }
 
     try {
       const { passwordMatch, ...submitData } = formData;
-      await axios.post(REGISTER_URL, submitData, {
+      const response = await axios.post(REGISTER_URL, submitData, {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });
-      showSuccess("Account Created!");
-      setTimeout(() => setSuccess(true), 1500);
+      setWelcomeUser(formData.firstName);
+      setTimeout(() => {
+        setAuth({ login: formData.email, username: formData.username, role: 'user', accessToken: response.data.accessToken });
+        setWelcomeUser(null);
+        navigate("/dashboard", { replace: true });
+      }, 1500);
     } catch (err) {
-      showError(err.response?.data?.message || "Registration failed");
+      console.error('Registration attempt failed:', err);
+      const errorMessage = err.response?.data?.message 
+        || err.response?.data?.error 
+        || (err.response ? `Error ${err.response.status}: ${err.response.statusText}` : "Network Error: Check your connection");
+      showError(errorMessage);
     } finally {
       setButtonStatus("Launch Verse");
     }
   };
 
+  const handleGoogleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      setButtonStatus("Initializing...");
+      try {
+        const response = await axios.post("/auth/google", { 
+          idToken: tokenResponse.access_token 
+        });
+        const { accessToken, user } = response.data;
+        setWelcomeUser(user.firstName || user.username);
+        setTimeout(() => {
+          setAuth({ login: user.email, username: user.username, role: user.role, accessToken });
+          setWelcomeUser(null);
+          navigate("/dashboard", { replace: true });
+        }, 1500);
+      } catch (err) {
+        showError("Google Sign-In failed. Please try again.");
+        setButtonStatus("Launch Verse");
+      }
+    },
+    onError: () => showError("Google Sign-In was unsuccessful.")
+  });
+
   return (
-    <div className="min-h-screen w-full font-outfit relative flex flex-col overflow-x-hidden bg-[#0a0a0c]">
+    <>
+      {welcomeUser && <LoginSuccessSplash username={welcomeUser} />}
+      <div className="min-h-screen w-full font-outfit relative flex flex-col overflow-x-hidden bg-[#0a0a0c]">
 
       {/* Background Layer - Synchronized with Zoom */}
       <div
@@ -228,6 +282,7 @@ const Register = () => {
                           required
                           value={formData.firstName}
                         />
+                        {fieldErrors.firstName && <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest mt-2 ml-1 animate-pulse">{fieldErrors.firstName}</p>}
                       </div>
                       <div className="group">
                         <label className="text-sm font-black text-white/50 uppercase tracking-[0.4em] ml-1 mb-5 block group-focus-within:text-primary transition-colors">Last Name</label>
@@ -239,6 +294,7 @@ const Register = () => {
                           required
                           value={formData.lastName}
                         />
+                        {fieldErrors.lastName && <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest mt-2 ml-1 animate-pulse">{fieldErrors.lastName}</p>}
                       </div>
                     </div>
 
@@ -255,6 +311,7 @@ const Register = () => {
                         onFocus={() => setEmailFocus(true)}
                         onBlur={() => setEmailFocus(false)}
                       />
+                      {fieldErrors.email && <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest mt-2 ml-1 animate-pulse">{fieldErrors.email}</p>}
                     </div>
 
                     <div className="group">
@@ -269,6 +326,7 @@ const Register = () => {
                         onFocus={() => setUsernameFocus(true)}
                         onBlur={() => setUsernameFocus(false)}
                       />
+                      {fieldErrors.username && <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest mt-2 ml-1 animate-pulse">{fieldErrors.username}</p>}
                     </div>
 
                     <div className="grid grid-cols-2 gap-8">
@@ -283,6 +341,7 @@ const Register = () => {
                           required
                           value={formData.password}
                         />
+                        {fieldErrors.password && <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest mt-2 ml-1 animate-pulse">{fieldErrors.password}</p>}
                       </div>
                       <div className="group relative">
                         <label className="text-sm font-black text-white/50 uppercase tracking-[0.4em] ml-1 mb-5 block group-focus-within:text-primary transition-colors">Confirm Key</label>
@@ -295,6 +354,7 @@ const Register = () => {
                           required
                           value={formData.passwordMatch}
                         />
+                        {fieldErrors.passwordMatch && <p className="text-[10px] text-red-500 font-bold uppercase tracking-widest mt-2 ml-1 animate-pulse">{fieldErrors.passwordMatch}</p>}
                       </div>
                     </div>
                   </div>
@@ -316,7 +376,11 @@ const Register = () => {
                     <div className="h-[1px] bg-white/10 flex-1"></div>
                   </div>
 
-                  <button type="button" className="flex items-center justify-center gap-5 w-full bg-white/[0.03] border border-white/20 hover:bg-white/[0.08] hover:border-white/40 text-white font-black py-6 rounded-none text-xs uppercase tracking-[0.2em] transition-all group -mt-2">
+                  <button 
+                    type="button" 
+                    onClick={() => handleGoogleLogin()}
+                    className="flex items-center justify-center gap-5 w-full bg-white/[0.03] border border-white/20 hover:bg-white/[0.08] hover:border-white/40 text-white font-black py-6 rounded-none text-xs uppercase tracking-[0.2em] transition-all group -mt-2"
+                  >
                     <FcGoogle className="text-3xl group-hover:scale-110 transition-transform" />
                     Connect with Google Network
                   </button>
@@ -349,7 +413,8 @@ const Register = () => {
 
       <SuccessToast message={successMessage} show={showSuccessToast} />
       <ErrorToast message={errorMessage} show={showErrorToast} />
-    </div>
+      </div>
+    </>
   );
 };
 

@@ -29,6 +29,8 @@ const logoutRoutes = require('./routes/logoutRoutes');
 const profileRoutes = require('./routes/profileRoutes');
 const postsRoutes = require('./routes/postsRoutes');
 const statsRoutes = require('./routes/statsRoutes');
+const googleAuthRoutes = require('./routes/googleAuthRoutes');
+const recoveryRoutes = require('./routes/recoveryRoutes');
 
 // Middleware
 app.use(express.json());
@@ -52,6 +54,8 @@ app.use('/profile', profileRoutes);
 // Post Routes
 app.use('/api/posts', postsRoutes);
 app.use('/api/stats', statsRoutes);
+app.use('/auth/google', googleAuthRoutes);
+app.use('/auth/recovery', recoveryRoutes);
 
 server.listen(port, () => {
     console.log(`Server running on port: ${port}`);

@@ -19,11 +19,11 @@ const loginUser = async (req, res) => {
                 ]
             }
         );
-        if (!foundUser) return res.status(401).json({ message: 'User not found.' });
+        if (!foundUser) return res.status(401).json({ message: 'ID not found' });
 
         // Compare passwords
         const pwdMatch = await bcrypt.compare(password, foundUser.password);
-        if (!pwdMatch) return res.status(401).json({ message: 'Invalid credentials.' });
+        if (!pwdMatch) return res.status(401).json({ message: 'Password or ID is incorrect' });
 
         // If successful login, store access token
         const accessToken = jwt.sign(
@@ -76,6 +76,10 @@ const loginUser = async (req, res) => {
                 username: userData.username,
                 email: userData.email,
                 role: userData.role,
+                avatar: userData.avatar,
+                following: userData.following || [],
+                followers: userData.followers || [],
+                posts: userData.posts || []
             },
             accessToken
         });

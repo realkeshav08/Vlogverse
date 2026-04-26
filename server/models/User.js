@@ -12,6 +12,8 @@ const userSchema = new mongoose.Schema({
         enum: ['user', 'moderator', 'admin', 'owner'],
         default: 'user'
     },
+    resetPasswordToken: { type: String },
+    resetPasswordExpires: { type: Date },
     refreshToken: { type: String },
 
     // Profile fields

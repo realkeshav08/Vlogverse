@@ -15,20 +15,20 @@ const handleRefreshToken = async (req, res) => {
         const foundUser = await User.findOne({ refreshToken });
         if (!foundUser) return res.status(403).json({ message: 'Forbidden: Invalid refresh token.' });
 
-        const populatedUser = await User.findById(foundUser._id)
-            .populate({
-                path: 'notifications',
-                options: { sort: { createdAt: -1 }, limit: 10 },
-                populate: { path: 'from', select: 'username avatar' }
-            })
-            .exec();
-
-
-        // Verify the refresh token
-        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, (err, decoded) => {
-            if (err || foundUser.email !== decoded.email) {
+        // Verify the refresh token FIRST
+        jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET, async (err, decoded) => {
+            if (err || !decoded || foundUser.email !== decoded.email) {
                 return res.status(403).json({ message: 'Forbidden: Token mismatch or expired.' });
             }
+
+            // ONLY populate if token is valid
+            const populatedUser = await User.findById(foundUser._id)
+                .populate({
+                    path: 'notifications',
+                    options: { sort: { createdAt: -1 }, limit: 10 },
+                    populate: { path: 'from', select: 'username avatar' }
+                })
+                .exec();
 
             // Generate new access token
             const accessToken = jwt.sign(
@@ -40,10 +40,10 @@ const handleRefreshToken = async (req, res) => {
                     email: foundUser.email,
                     role: foundUser.role,
                     avatar: foundUser.avatar,
-                    totalPosts: foundUser.posts,
-                    following: foundUser.following,
-                    followers: foundUser.followers,
-                    notifications: populatedUser.notifications
+                    totalPosts: foundUser.posts?.length || 0,
+                    following: foundUser.following?.length || 0,
+                    followers: foundUser.followers?.length || 0,
+                    notifications: populatedUser?.notifications || []
                 },
                 process.env.ACCESS_TOKEN_SECRET,
                 { expiresIn: '60m' }
@@ -56,10 +56,10 @@ const handleRefreshToken = async (req, res) => {
                 username: foundUser.username,
                 avatar: foundUser.avatar,
                 role: foundUser.role,
-                totalPosts: foundUser.posts,
-                following: foundUser.following,
-                followers: foundUser.followers,
-                notifications: populatedUser.notifications,
+                totalPosts: foundUser.posts?.length || 0,
+                following: foundUser.following?.length || 0,
+                followers: foundUser.followers?.length || 0,
+                notifications: populatedUser?.notifications || [],
                 accessToken
             });
         });

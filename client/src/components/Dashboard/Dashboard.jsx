@@ -20,10 +20,11 @@ const Dashboard = () => {
   const [totalPages, setTotalPages] = useState(1);
 
   const fetchPosts = async (page = 1) => {
-    if (!auth?.id || !auth?.following) return;
+    if (!auth?.id) return;
     setLoading(true);
     try {
-      const userIds = [auth.id, ...auth.following].join(',');
+      const following = Array.isArray(auth?.following) ? auth.following : [];
+      const userIds = [auth.id, ...following].join(',');
 
       const response = await axiosPrivate.get(`${POST_URL}?page=${page}&limit=10&userIds=${userIds}`, {
         headers: {
