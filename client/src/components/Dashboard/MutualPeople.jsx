@@ -48,130 +48,98 @@ function Activity({ refreshPosts, auth, setAuth }) {
 
 
   return (
-    <div>
-      <div className="bg-base-100 md:flex flex-col p-4 rounded-xl shadow-md sm:w-full">
-        <div className="flex gap-2 justify-between w-full items-center mb-3 sm:w-full">
-          <div className="flex gap-3 items-center justify-center">
-            <span className="material-symbols-outlined text-primary">
-              <FaUserFriends />
-            </span>
-            <div className="font-bold">People You May Know</div>
+    <div className="bg-white/[0.03] backdrop-blur-[30px] border border-white/10 rounded-none overflow-hidden relative shadow-[0_20px_50px_rgba(0,0,0,0.3)] hover:border-primary/40 transition-all duration-500">
+      <div className="p-6">
+        <div className="flex items-center gap-4 mb-8">
+          <div className="w-8 h-8 flex items-center justify-center bg-primary/20 text-primary border border-primary/30">
+            <FaUserFriends size={14} />
           </div>
+          <h3 className="text-xs font-black uppercase tracking-[0.4em] text-white/80">Network Signals</h3>
         </div>
-        <div className="md:flex flex-col gap-2">
 
-          {loading
-            ?
-            <Loading />
-            :
-            (
-              suggestedUsers.map((user, i) => {
-                const isFollowing = auth?.following.includes(user._id);
+        <div className="flex flex-col gap-4">
+          {loading ? (
+            <div className="py-10 flex justify-center">
+              <Loading />
+            </div>
+          ) : suggestedUsers.length > 0 ? (
+            suggestedUsers.map((user, i) => {
+              const isFollowing = auth?.following.includes(user._id);
 
-                const handleFollow = async () => {
+              const handleFollow = async () => {
+                try {
+                  const response = await axiosPrivate.post(`/api/users/follow/${user._id}`, {}, {
+                    headers: { Authorization: `Bearer ${auth?.accessToken}` }
+                  });
 
-                  try {
-                    const response = await axiosPrivate.post(`/api/users/follow/${user._id}`, {}, {
-                      headers: {
-                        Authorization: `Bearer ${auth?.accessToken}`
-                      }
-                    });
-
-                    // Follow user
-                    if (!isFollowing) {
-                      // Update follow list
-                      setAuth(prev => ({
-                        ...prev,
-                        following: [...prev.following, user._id]
-                      }));
-
-                      // Payload for creating notification
-                      const payload = notificationTemplate.follow(auth, user._id);
-
-                      // Send notification
-                      try {
-                        const notifyUser = await axiosPrivate.post('/system/notifications', payload, {
-                          headers: {
-                            Authorization: `Bearer ${auth?.accessToken}`
-                          }
-                        });
-
-                        // Refresh dashboard posts with new follow included
-                        refreshPosts();
-                      }
-                      catch (err) {
-                        console.error('Failed to notify user:', err);
-                      }
-
-                    } else { // Unfollow user
-                      // Update follow list
-                      setAuth(prev => ({
-                        ...prev,
-                        following: prev.following.filter(id => id !== user._id)
-                      }));
-
-                      // Payload for deleting notification
-                      const payload = {
-                        type: 'follow',
-                        from: auth?.id,
-                        to: user._id,
-                      }
-
-                      // Delete notification
-                      try {
-                        const deleteNotification = await axiosPrivate.delete('/system/notifications', {
-                          headers: {
-                            Authorization: `Bearer ${auth?.accessToken}`,
-                          },
-                          data: payload
-                        });
-
-                        // Refresh dashboard posts with new follow included
-                        refreshPosts();
-                      }
-                      catch (err) {
-                        console.error('Failed to notify user:', err);
-                      }
-
+                  if (!isFollowing) {
+                    setAuth(prev => ({
+                      ...prev,
+                      following: [...prev.following, user._id]
+                    }));
+                    const payload = notificationTemplate.follow(auth, user._id);
+                    try {
+                      await axiosPrivate.post('/system/notifications', payload, {
+                        headers: { Authorization: `Bearer ${auth?.accessToken}` }
+                      });
+                      refreshPosts();
+                    } catch (err) {
+                      console.error('Failed to notify user:', err);
+                    }
+                  } else {
+                    setAuth(prev => ({
+                      ...prev,
+                      following: prev.following.filter(id => id !== user._id)
+                    }));
+                    const payload = { type: 'follow', from: auth?.id, to: user._id };
+                    try {
+                      await axiosPrivate.delete('/system/notifications', {
+                        headers: { Authorization: `Bearer ${auth?.accessToken}` },
+                        data: payload
+                      });
+                      refreshPosts();
+                    } catch (err) {
+                      console.error('Failed to notify user:', err);
                     }
                   }
-                  catch (err) {
-                    console.log(err);
-                  }
-                };
+                } catch (err) {
+                  console.log(err);
+                }
+              };
 
-                return (
-                  <div className="flex gap-2 shadow-md p-2" key={i}>
-                    <div className="flex flex-row justify-between items-center w-full flex-wrap">
-                      <Link to={`/profile/${user.username}`} className='flex flex-row justify-start items-center flex-wrap'>
-                        <img
-                          src={user.avatar || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTgD14vQ6I-UBiHTcwxZYnpSfLFJ2fclwS2A&s"}
-                          alt=""
-                          className="w-[45px] rounded-full"
-                        />
-                        <div className='flex flex-col ml-2'>
-                          <span className="font-semibold">{`${user.firstName} ${user.lastName}`}</span>
-                          <span className="text-[12px]">@{user.username}</span>
-                        </div>
-                      </Link>
-                      <span className='link link-secondary link-hover text-lg p-2' onClick={() => handleFollow()}>
-                        {isFollowing ?
-                          <FaUserCheck />
-                          :
-                          <IoPersonAddSharp />
-                        }
-                      </span>
-                    </div>
+              return (
+                <div className="group/user relative p-4 bg-white/[0.02] border border-white/5 hover:border-primary/40 transition-all duration-300" key={user._id}>
+                  <div className="flex items-center justify-between gap-4">
+                    <Link to={`/profile/${user.username}`} className="flex items-center gap-4 group-hover/user:translate-x-1 transition-transform duration-300">
+                      <img
+                        src={user.avatar || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTgD14vQ6I-UBiHTcwxZYnpSfLFJ2fclwS2A&s"}
+                        alt=""
+                        className="w-12 h-12 rounded-none border border-white/10"
+                      />
+                      <div className="flex flex-col">
+                        <span className="text-sm font-black text-white/80 tracking-tighter uppercase">{user.firstName}</span>
+                        <span className="text-[10px] font-bold text-white/20 uppercase tracking-widest">@{user.username}</span>
+                      </div>
+                    </Link>
+                    <button 
+                      onClick={() => handleFollow()}
+                      className={`w-10 h-10 flex items-center justify-center transition-all duration-300 ${isFollowing ? 'bg-primary/20 text-primary border border-primary/40' : 'bg-white/5 text-white/40 border border-white/10 hover:border-primary hover:text-primary hover:bg-primary/10'}`}
+                    >
+                      {isFollowing ? <FaUserCheck size={16} /> : <IoPersonAddSharp size={16} />}
+                    </button>
                   </div>
-                )
-              })
-            )
-          }
-
+                </div>
+              );
+            })
+          ) : (
+            <div className="py-10 text-center opacity-20 text-[10px] font-black uppercase tracking-widest">
+              No new signals detected
+            </div>
+          )}
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default Activity

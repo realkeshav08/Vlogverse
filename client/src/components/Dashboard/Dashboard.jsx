@@ -44,12 +44,12 @@ const Dashboard = () => {
 
 
   return (
-    <div className="min-h-screen pb-10">
-      {/* main container */}
-      <div className="w-[95%] max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-12 gap-8">
+    <div className="min-h-screen pb-20">
+      {/* Main container */}
+      <div className="max-w-[1600px] mx-auto grid grid-cols-1 lg:grid-cols-12 gap-10 px-4 md:px-10">
 
-        {/* Left Sidebar - Profile & Network */}
-        <div className="hidden lg:col-span-3 lg:flex flex-col gap-6 h-fit sticky top-24">
+        {/* Left Sidebar - Digital Passport & Network Signals */}
+        <div className="hidden lg:col-span-3 lg:flex flex-col gap-10 h-fit sticky top-28">
           <UserInfo />
           <MutualPeople
             auth={auth}
@@ -58,8 +58,8 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* Main Feed */}
-        <div className="col-span-1 lg:col-span-6 flex flex-col gap-6">
+        {/* Main Feed - Central Intelligence */}
+        <div className="col-span-1 lg:col-span-6 flex flex-col gap-10">
           <WelcomeBanner />
           <Posts
             auth={auth}
@@ -75,8 +75,8 @@ const Dashboard = () => {
           />
         </div>
 
-        {/* Right Sidebar - Widgets */}
-        <div className="hidden lg:col-span-3 lg:flex flex-col gap-6 h-fit sticky top-24">
+        {/* Right Sidebar - System Widgets */}
+        <div className="hidden lg:col-span-3 lg:flex flex-col gap-10 h-fit sticky top-28">
           <Activity />
           <Blogs />
           <Events />

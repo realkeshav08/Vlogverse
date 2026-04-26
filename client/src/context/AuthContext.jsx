@@ -1,4 +1,4 @@
-import { createContext, useState } from 'react'
+import { createContext, useState, useEffect } from 'react'
 
 const AuthContext = createContext({})
 
@@ -6,6 +6,10 @@ export const AuthProvider = ({ children }) => {
 
     const [auth, setAuth] = useState({})
     const [persist, setPersist] = useState(JSON.parse(localStorage.getItem('persist')) || false);
+
+    useEffect(() => {
+        localStorage.setItem('persist', JSON.stringify(persist));
+    }, [persist]);
 
     return (
         <AuthContext.Provider value={

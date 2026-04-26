@@ -125,33 +125,36 @@ const CreatePost = ({ POST_URL, auth, setAuth, setPosts }) => {
     }
 
     return (
-        <div className="mx-auto bg-base-100 p-4 rounded-lg shadow-md mb-6">
+        <div className="bg-white/[0.03] backdrop-blur-[30px] border border-white/10 p-8 shadow-[0_20px_50px_rgba(0,0,0,0.3)] mb-10 group hover:border-primary/40 transition-all duration-500">
             {/* Top Row: Avatar and Input */}
-            <div className="flex gap-4">
-                <img
-                    src={auth.avatar || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTgD14vQ6I-UBiHTcwxZYnpSfLFJ2fclwS2A&s"}
-                    alt="avatar"
-                    className="w-10 h-10 md:w-12 md:h-12 rounded-full object-cover shadow-sm"
-                />
+            <div className="flex gap-6">
+                <div className="relative flex-shrink-0">
+                    <img
+                        src={auth.avatar || "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRTgD14vQ6I-UBiHTcwxZYnpSfLFJ2fclwS2A&s"}
+                        alt="avatar"
+                        className="w-14 h-14 rounded-none border border-white/20 p-1 bg-[#0a0a0c]"
+                    />
+                    <div className="absolute inset-0 border border-primary/0 group-hover:border-primary/50 transition-all duration-500"></div>
+                </div>
                 <textarea
                     id="body"
                     onChange={handleChange}
                     value={postData.body}
                     autoComplete="off"
-                    className="w-full min-h-[120px] max-h-[300px] rounded-xl bg-base-200 p-4 text-base focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all resize-none"
+                    className="w-full min-h-[140px] max-h-[400px] bg-transparent border-none p-0 text-lg text-white font-medium placeholder:text-white/20 focus:outline-none focus:ring-0 transition-all resize-none leading-relaxed"
                     rows="3"
-                    placeholder={`What's on your mind, ${auth.firstName}?`}
+                    placeholder={`Transmit a log, ${auth.firstName}...`}
                 />
             </div>
 
             {/* Media Preview / Inputs */}
             {(showImageInput || postData.media.images[0]) && (
-                <div className="mt-4 animate-fade-in pl-14 md:pl-16">
-                    <div className="relative">
+                <div className="mt-6 pl-20">
+                    <div className="relative group/input">
                         <input
                             type="url"
-                            placeholder="Paste image URL..."
-                            className="input input-sm w-full"
+                            placeholder="Neural link to image (URL)..."
+                            className="w-full bg-white/5 border border-white/10 p-4 text-xs font-black uppercase tracking-widest text-white focus:outline-none focus:border-primary/50 transition-all"
                             autoFocus={showImageInput}
                             onChange={(e) =>
                                 setPostData(prev => ({
@@ -165,19 +168,22 @@ const CreatePost = ({ POST_URL, auth, setAuth, setPosts }) => {
                             value={postData.media.images[0] || ''}
                         />
                         {postData.media.images[0] && (
-                            <img src={postData.media.images[0]} alt="Preview" className="mt-2 h-32 w-auto rounded-lg object-cover border border-base-300" onError={(e) => e.target.style.display = 'none'} onLoad={(e) => e.target.style.display = 'block'} />
+                            <div className="mt-4 relative border border-white/10 inline-block overflow-hidden">
+                                <img src={postData.media.images[0]} alt="Preview" className="h-40 w-auto object-cover grayscale-[30%] hover:grayscale-0 transition-all duration-500" onError={(e) => e.target.style.display = 'none'} onLoad={(e) => e.target.style.display = 'block'} />
+                                <div className="absolute inset-0 bg-primary/5 pointer-events-none"></div>
+                            </div>
                         )}
                     </div>
                 </div>
             )}
 
             {(showVideoInput || postData.media.videos[0]) && (
-                <div className="mt-4 animate-fade-in pl-14 md:pl-16">
-                    <div className="relative">
+                <div className="mt-6 pl-20">
+                    <div className="relative group/input">
                         <input
                             type="url"
-                            placeholder="Paste video URL..."
-                            className="input input-sm w-full"
+                            placeholder="Neural link to video (URL)..."
+                            className="w-full bg-white/5 border border-white/10 p-4 text-xs font-black uppercase tracking-widest text-white focus:outline-none focus:border-primary/50 transition-all"
                             autoFocus={showVideoInput}
                             onChange={(e) =>
                                 setPostData(prev => ({
@@ -196,57 +202,44 @@ const CreatePost = ({ POST_URL, auth, setAuth, setPosts }) => {
 
 
             {/* Divider */}
-            <div className="divider my-2"></div>
+            <div className="h-[1px] bg-white/5 my-8"></div>
 
             {/* Action Buttons */}
             <div className="flex items-center justify-between">
-                <div className="flex gap-2 text-sm text-base-content/70">
+                <div className="flex gap-4">
                     <button
                         onClick={() => setShowImageInput(!showImageInput)}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-colors ${showImageInput ? 'bg-primary/10 text-primary' : 'hover:bg-base-200'}`}
+                        className={`flex items-center gap-3 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 border ${showImageInput ? 'bg-primary border-primary text-white' : 'border-white/10 text-white/40 hover:text-white hover:border-white/20'}`}
                     >
-                        📸 <span>Photo</span>
+                        <span>IMAGE</span>
                     </button>
                     <button
                         onClick={() => setShowVideoInput(!showVideoInput)}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-colors ${showVideoInput ? 'bg-primary/10 text-primary' : 'hover:bg-base-200'}`}
+                        className={`flex items-center gap-3 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 border ${showVideoInput ? 'bg-primary border-primary text-white' : 'border-white/10 text-white/40 hover:text-white hover:border-white/20'}`}
                     >
-                        🎥 <span>Video</span>
+                        <span>VIDEO</span>
                     </button>
                     <button
                         type="button"
                         onClick={() => setPostData(prev => ({ ...prev, featured: !prev.featured }))}
-                        className={`flex items-center gap-2 px-3 py-1.5 rounded-full transition-colors ${postData.featured ? 'bg-yellow-500/10 text-yellow-600' : 'hover:bg-base-200'}`}
+                        className={`flex items-center gap-3 px-4 py-2 text-[10px] font-black uppercase tracking-[0.2em] transition-all duration-300 border ${postData.featured ? 'bg-yellow-500/20 border-yellow-500/50 text-yellow-500' : 'border-white/10 text-white/40 hover:text-white hover:border-white/20'}`}
                     >
-                        {postData.featured ? '⭐️ Featured' : '☆ Feature'}
+                        <span>{postData.featured ? 'PRIORITY' : 'NORMAL'}</span>
                     </button>
 
                 </div>
                 <button
                     onClick={handlePost}
-                    className="btn btn-primary btn-sm px-6 rounded-full font-bold shadow-md shadow-primary/30"
+                    className="h-12 px-10 bg-primary text-white text-xs font-black uppercase tracking-[0.3em] hover:bg-primary/80 transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-[0_10px_30px_rgba(var(--primary-rgb),0.3)]"
                     disabled={postData.body.trim() === "" || buttonStatus === "Loading..."}
                 >
-                    {buttonStatus === "Loading..." ? <span className="loading loading-spinner loading-xs"></span> : "Post"}
+                    {buttonStatus === "Loading..." ? "TRANSMITTING..." : "TRANSMIT"}
                 </button>
             </div>
 
-            {/* Add Toast Components */}
-            <SuccessToast
-                message={successMessage}
-                show={showSuccessToast}
-                status="success"
-                icon={
-                    <FaCheckCircle className="text-[--tertiary] text-2xl" />
-                }
-            />
-            <ErrorToast
-                message={errorMessage}
-                show={showErrorToast}
-                status="error"
-                icon={<FaTimesCircle className="text-red-600 text-2xl" />}
-                iconBgColor="bg-red-700"
-            />
+            {/* Toast Components */}
+            <SuccessToast message={successMessage} show={showSuccessToast} status="success" icon={<FaCheckCircle className="text-white text-xl" />} />
+            <ErrorToast message={errorMessage} show={showErrorToast} status="error" icon={<FaTimesCircle className="text-white text-xl" />} />
         </div>
     )
 }

@@ -64,7 +64,7 @@ const loginUser = async (req, res) => {
         res.cookie('jwt', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            sameSite: 'Strict',
+            sameSite: 'Lax',
             maxAge: persist ? 15 * 24 * 60 * 60 * 1000 : 60 * 60 * 1000
         });
         res.json({
